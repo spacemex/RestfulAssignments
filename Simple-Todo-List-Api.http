@@ -1,0 +1,32 @@
+@baseUrl = http://localhost:3000
+@id = 4v8hseXSLHu2cYhWkdx2_ST_HIk5rrNwrR2HEfTZd6QUBl6hDM9NBjsVSblyI_f5z4swZomSfLzOgyW-aE5JUQ
+
+### Get Single To-Do List Entry By Id
+GET {{baseUrl}}/api/to-do/{{id}}/
+Content-Type: application/json
+
+### Get All To-Do List Entries
+GET {{baseUrl}}/api/to-do/
+Content-Type: application/json
+
+### Create A New To-Do List Entry
+POST {{baseUrl}}/api/to-do/
+Content-Type: application/json
+
+{
+  "id": "4v8hseXSLHu2cYhWkdx2_ST_HIk5rrNwrR2HEfTZd6QUBl6hDM9NBjsVSblyI_f5z4swZomSfLzOgyW-aE5JUQ",
+  "title": "Example Entry Task",
+  "body": "Watch Top Gear \n Get Pig"
+}
+
+### Update To-List Entry By Id
+PATCH {{baseUrl}}/api/to-do/{{id}}
+Content-Type: application/json
+
+{
+  "completed": true
+}
+
+### Delete To-Do List Entry By Id
+DELETE {{baseUrl}}/api/to-do/{{id}}
+Content-Type: application/json

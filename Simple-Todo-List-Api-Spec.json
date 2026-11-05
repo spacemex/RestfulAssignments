@@ -1,0 +1,447 @@
+
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Simple Todo List API",
+    "description": "A simple REST API for creating, retrieving, updating, and deleting to-do entries.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Local development server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Todos",
+      "description": "To-do entry management"
+    }
+  ],
+  "paths": {
+    "/api/to-do": {
+      "get": {
+        "tags": ["Todos"],
+        "summary": "List all to-do entries",
+        "operationId": "getAllTodos",
+        "responses": {
+          "200": {
+            "description": "All entries retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TodoListResponse"
+                },
+                "example": {
+                  "data": [
+                    {
+                      "id": "todo-001",
+                      "title": "Example Entry Task",
+                      "body": "Watch Top Gear",
+                      "completed": false
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Todos"],
+        "summary": "Create a to-do entry",
+        "operationId": "createTodo",
+        "description": "Creates a new entry. The id, title, and body must be nonempty strings. The completed field defaults to false.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTodoRequest"
+              },
+              "example": {
+                "id": "todo-001",
+                "title": "Example Entry Task",
+                "body": "Watch Top Gear"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Entry created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TodoResponse"
+                },
+                "example": {
+                  "data": {
+                    "id": "todo-001",
+                    "title": "Example Entry Task",
+                    "body": "Watch Top Gear",
+                    "completed": false
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing, invalid, or malformed request body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "message": "Invalid / Malformed Body. `id`, `title`, `body` are required"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "An entry with this ID already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "message": "Duplicate key"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed to store the new entry",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "message": "Server Error: failed to create new entry"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/to-do/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "Unique identifier of the to-do entry",
+          "schema": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*"
+          },
+          "example": "todo-001"
+        }
+      ],
+      "get": {
+        "tags": ["Todos"],
+        "summary": "Get a to-do entry by ID",
+        "operationId": "getTodoById",
+        "responses": {
+          "200": {
+            "description": "Entry retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TodoResponse"
+                },
+                "example": {
+                  "data": {
+                    "id": "todo-001",
+                    "title": "Example Entry Task",
+                    "body": "Watch Top Gear",
+                    "completed": false
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The specified entry does not exist or its ID is invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "message": "Invalid id/key provided"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The stored entry is malformed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "message": "Server Error: Invalid / Malformed To-Do Entry"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Todos"],
+        "summary": "Update a to-do entry",
+        "operationId": "updateTodo",
+        "description": "Updates an existing entry. At least one of title, body, or completed is required. The ID cannot be changed.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTodoRequest"
+              },
+              "example": {
+                "completed": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Entry updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TodoResponse"
+                },
+                "example": {
+                  "data": {
+                    "id": "todo-001",
+                    "title": "Example Entry Task",
+                    "body": "Watch Top Gear",
+                    "completed": true
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing, invalid, or malformed update body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "message": "At least one field is required"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The specified entry does not exist or its ID is invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "message": "Invalid id/key provided"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Todos"],
+        "summary": "Delete a to-do entry",
+        "operationId": "deleteTodo",
+        "responses": {
+          "204": {
+            "description": "Entry deleted successfully. No response body."
+          },
+          "404": {
+            "description": "The specified entry does not exist or its ID is invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "message": "Invalid id/key provided"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed to delete the entry",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "message": "Server Error: failed to delete entry"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TodoEntry": {
+        "type": "object",
+        "description": "A stored to-do entry",
+        "required": [
+          "id",
+          "title",
+          "body",
+          "completed"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*",
+            "description": "Unique entry identifier",
+            "example": "todo-001"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*",
+            "description": "Short task title",
+            "example": "Example Entry Task"
+          },
+          "body": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*",
+            "description": "Task description",
+            "example": "Watch Top Gear"
+          },
+          "completed": {
+            "type": "boolean",
+            "description": "Whether the task has been completed",
+            "example": false
+          }
+        }
+      },
+      "CreateTodoRequest": {
+        "type": "object",
+        "description": "Fields accepted when creating a new to-do entry",
+        "required": [
+          "id",
+          "title",
+          "body"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*",
+            "description": "Unique entry identifier",
+            "example": "todo-001"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*",
+            "description": "Short task title",
+            "example": "Example Entry Task"
+          },
+          "body": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*",
+            "description": "Task description",
+            "example": "Watch Top Gear"
+          },
+          "completed": {
+            "type": "boolean",
+            "default": false,
+            "description": "Defaults to false if omitted",
+            "example": false
+          }
+        }
+      },
+      "UpdateTodoRequest": {
+        "type": "object",
+        "description": "At least one updatable field must be included",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*",
+            "description": "Replacement task title",
+            "example": "Updated task"
+          },
+          "body": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*",
+            "description": "Replacement task description",
+            "example": "Updated description"
+          },
+          "completed": {
+            "type": "boolean",
+            "description": "New completion status",
+            "example": true
+          }
+        },
+        "anyOf": [
+          {
+            "required": ["title"]
+          },
+          {
+            "required": ["body"]
+          },
+          {
+            "required": ["completed"]
+          }
+        ]
+      },
+      "TodoListResponse": {
+        "type": "object",
+        "required": ["data"],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TodoEntry"
+            }
+          }
+        }
+      },
+      "TodoResponse": {
+        "type": "object",
+        "required": ["data"],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/TodoEntry"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": ["message"],
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Human-readable error message"
+          }
+        }
+      }
+    }
+  }
+}
