@@ -1,5 +1,5 @@
 {
-  "name": "restful_assignments_NAME",
+  "name": "restful_assignments_user_authentication_system",
   "version": "1.0",
   "description": "My Attempts At https://github.com/lua0repo/RESTfulProject, Without AI Assistance!",
   "license": "MIT",
@@ -12,12 +12,16 @@
   },
   "private": false,
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.19.2",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2"
   },
   "dependencies": {
-    "express": "^5.3.0"
+    "bcrypt": "^6.0.0",
+    "express": "^5.3.0",
+    "jsonwebtoken": "^9.0.3"
   }
 }

@@ -1,0 +1,34 @@
+@baseUrl = http://localhost:3000
+@id = d273ed2b-f00e-422e-8799-d88a7632face
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQyNzNlZDJiLWYwMGUtNDIyZS04Nzk5LWQ4OGE3NjMyZmFjZSIsInVzZXJuYW1lIjoiU3BhY2VfTWV4IiwiaWF0IjoxNzk0MzUxOTQ2LCJleHAiOjE3OTQ5NTY3NDZ9.sxCOMlr8u6WX1ryCrBu9J4kt4ZlGawg9mkYci-5WI_8
+
+### Get All Users (Sanitized)
+GET {{baseUrl}}/api/
+Content-Type: application/json
+
+### Register New User
+POST {{baseUrl}}/api/auth/register/
+Content-Type: application/json
+
+{
+  "username": "Space_Mex",
+  "email": "johnDoe@example.com",
+  "password": "A Real Password :) 99"
+}
+
+### Login
+POST {{baseUrl}}/api/auth/login/
+Content-Type: application/json
+
+{
+  "identity": "892d1504-8ccb-481e-8f67-322a2453209f",
+  "password": "A Real Password :) 99"
+}
+
+### Me Route
+GET {{baseUrl}}/api/auth/me/
+Content-Type: application/json
+Authorization: Token {{token}}
+
+### Delete User
+DELETE {{baseUrl}}/api/auth/{{id}}
